@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		.clearfix:after{
+			content: "";
+			height: 0;
+			display: block;
+			clear: both;
+			visibility: hidden;
+			overflow: hidden;
+		}
+		.chat{
+			width: 500px;
+			height: 580px;
+			background: #d8dbe2;
+			margin: 0 auto;
+		}
+		.reconds{
+			height: 500px;
+			background: #c9e4ca;
+			border-bottom:1px solid black; 
+			overflow: auto;
+		}
+		.recond{
+			/*width: 100%;*/
+			padding: 10px;
+			
+		}
+		.recond img{
+			width: 50px;
+			height: 50px;
+			display: block;
+			border-radius: 50%;
+		}
+		.recond p{
+			padding: 10px;
+			margin: 7px 2px;
+			max-width: 400px;
+			border-radius: 10px;
+			white-space: pre-wrap;
+			word-break: break-all;
+			background: #58a4b0;
+		}
+		.left{
+			float: left;
+		}
+		.right{
+			float: right;
+		}
+		#inp{
+			border: none;
+			padding: 7px;
+			float: left;
+			background: #d8dbe2;
+		}
+		#inp:focus{
+			outline: none;
+		}
+		.btn{
+			width: 70px;
+			height: 30px;
+			float: left;
+			line-height: 30px;
+			text-align: center;
+			color: #fff;
+			margin-top: 40px;
+			border-radius: 15px;
+			background: #58a4b0;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<div class="chat">
+		<div class="reconds">
+			<div class="recond clearfix">
+				<img src="images/tm.jpg" alt="" class="left">
+				<p class="left">hello!hello!hello!hello!hello!</p>
+			</div>
+			<div class="recond clearfix">
+				<img src="images/tm.jpg" alt="" class="right">
+				<p class="right">hello!hello!hello! hello!hello!hello!hello!hell o!hello!hello!hello!hello!hello!hello!hello!hello!h ello!hello!hello!hello!hello! hello!hello!hello!hello!</p>
+			</div>
+		</div>
+		<div class="inp">
+			<textarea id="inp" cols="55" rows="4"></textarea>
+			<div class="btn">发送</div>
+		</div>	
+		
+
+	</div>
+	<script src="ajax1.0.0.js"></script>
+	<script>
+		var chat=(function(){
+			var $rec=document.getElementsByClassName('reconds')[0];
+			var $inp=document.getElementById('inp');
+			var $btn=document.getElementsByClassName('btn')[0];
+			// console.log($rec,$inp,$btn)
+			return {
+				init : function(){
+					this.event()
+				},
+				event : function(){
+					var _this=this;
+					$btn.onclick=function(){
+						var val=$inp.value;
+						_this.createEle(val,'right');
+						_this.sendMsg(val);
+						$inp.value='';
+					}
+					$inp.onkeydown=function(e){
+						e= e || window.event;
+						if(e.ctrlKey && e.keyCode == 13){
+							var val=$inp.value;
+							_this.createEle(val,'right');
+							_this.sendMsg(val);
+							$inp.value='';
+						}
+					}
+				},
+				createEle : function(val,point){
+					var textNode=document.createTextNode(val);
+					var $div=document.createElement('div');
+					var $img=document.createElement('img');
+					var $p=document.createElement('p');
+					$img.src='images/tm.jpg';
+					$img.className=point;
+					$p.className=point;
+					$div.className='recond clearfix'
+					$p.appendChild(textNode);
+					$div.appendChild($img);
+					$div.appendChild($p);
+					$rec.appendChild($div);
+					$rec.scrollTop=$rec.scrollHeight-$rec.clientHeight;
+				},
+				sendMsg:function(val){
+					var _this=this;
+					var params={
+						method:'post',
+						data:"key=7e0c61672f674208a85f85f7ff08855f&userid=robot&info="+val,
+						success:function(data){
+							// debugger;
+							_this.createEle(data.text,'left');
+						}
+					}
+					sendAjax('http://openapi.tuling123.com/openapi/api',params)
+				}
+			}
+		}())
+		chat.init();
+			// var params={
+			// 	method:'post',
+			// 	data:"key=7e0c61672f674208a85f85f7ff08855f&userid=robot&info=你好",
+			// 	success:function(data){
+			// 		console.log(data.text);
+			// 	}
+			// }
+			// sendAjax('http://openapi.tuling123.com/openapi/api',params);
+		
+	</script>
+</body>
+</html>
